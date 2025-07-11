@@ -1,2 +1,5 @@
-run *args:
-    @ zig run src/main.zig -- {{args}}
+run *args: build
+    @ ./zig-out/bin/entrybook.exe {{args}}
+
+build:
+    @ zig build

@@ -4,6 +4,7 @@ const fmt = std.fmt;
 const print = std.debug.print;
 const Allocator = std.mem.Allocator;
 const ArrayList = std.ArrayList;
+const datetime = @import("datetime").datetime;
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
@@ -29,17 +30,17 @@ pub fn main() !void {
         }
     }
 
-    const now = std.time.now();
-    const current_day = now.day_of_week;
-    const days_to_subtract = if (current_day == 0) 6 else current_day - 1;
-    const last_monday = now - std.time.Duration{ .days = days_to_subtract };
+    const now = datetime.Date.now();
+    const current_day = now.weekday();
+    const shift_days: i4 = @intCast(current_day);
+    const last_monday = now.shiftDays(-shift_days);
     print("Last Monday's date: {}\n", .{last_monday});
 
     if (std.mem.eql(u8, command, "write")) {
         const contents = command_args.items;
         const content = try joinStrings(allocator, contents, " "); 
 
-        //print("{s} {s}\n", .{command, content});
+        print("{s} {s}\n", .{command, content});
 
     } else {
         return error.UnknownCommand;
